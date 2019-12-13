@@ -7,7 +7,7 @@ new Array(answerNums).fill(0).forEach((item, index) => {
         const cp = require('child_process')
         const path = require('path');
         // Create the child
-        const child = cp.fork('./testCase.js', [`${path.join(__dirname, filePath)}`]);
+        const child = cp.fork('./test-case.js', [`${path.join(__dirname, filePath)}`]);
         // Kill after "x" milliseconds
         setTimeout(() => {
             child.kill();
