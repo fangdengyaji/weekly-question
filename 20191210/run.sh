@@ -1,2 +1,2 @@
 #!sh
-node --no-warnings 1210test.js
+node 1210test.js
