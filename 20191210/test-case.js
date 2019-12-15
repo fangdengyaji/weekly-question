@@ -2,6 +2,8 @@ const {
     performance
 } = require('perf_hooks');
 
+const { readTCFile } = require('./tc');
+
 function crateTestCase() {
     return Array.from({
         length: 10000

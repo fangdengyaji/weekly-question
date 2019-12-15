@@ -29,7 +29,7 @@ const executor = (filepath, args, cb) => {
 
 const run = async (opts) => {
     const answers = await getAnswers();
-    answers.reverse().reduce((chain, answer) => {
+    answers.reduce((chain, answer) => {
         const { n: filename, p: filepath } = answer;
 
         return chain.finally(() => {
