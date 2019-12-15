@@ -1,6 +1,9 @@
 const fs = require('fs');
 const path = require('path');
+const { promisify } = require('util');
 const zlib = require('zlib');
+
+const readFile = promisify(fs.readFile);
 
 const getRandomArbitrary = (min, max) => {
     return Math.random() * (max - min) + min;
@@ -35,7 +38,7 @@ const writeTCFile = (filename, data) => {
 };
 
 const readTCFile = (filename) => {
-    return fs.promises.readFile(filename)
+    return readFile(filename)
         .then(buffer => {
             return new Promise((resolve, reject) => {
                 zlib.inflate(buffer, (err, res) => {

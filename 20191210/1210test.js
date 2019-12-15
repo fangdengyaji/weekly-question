@@ -1,12 +1,15 @@
 const fs = require('fs');
 const path = require('path');
 const cp = require('child_process');
+const { promisify } = require('util');
 
 const TIMEOUT = 5000;
 
+const readdir = promisify(fs.readdir);
+
 const getAnswers = async () => {
     const dirPath = path.join(__dirname, 'answers');
-    const fileNames = (await fs.promises.readdir(dirPath)).filter(fn => fn.endsWith('.js'));
+    const fileNames = (await readdir(dirPath)).filter(fn => fn.endsWith('.js'));
     const answers = fileNames.map(name => ({ p: path.join(dirPath, name), n: name }));
     return answers;
 };
@@ -20,8 +23,14 @@ const executor = (filepath, args, cb) => {
             reject(new Error('Timeout'));
         }, TIMEOUT);
 
+
+        child.on('message', (e) => {
+            console.log(e);
+        });
+
         child.on('exit', e => {
             clearTimeout(timer);
+            child.kill();
             resolve();
         });
     });
@@ -32,7 +41,7 @@ const run = async (opts) => {
     answers.reduce((chain, answer) => {
         const { n: filename, p: filepath } = answer;
 
-        return chain.finally(() => {
+        return chain.then(() => {
             console.log(`***** ${filename} 开始测试 *****`);
             const p = executor('./test-case.js', [filepath])
                 .catch(err => {
@@ -42,7 +51,7 @@ const run = async (opts) => {
                         console.error(err);
                     }
                 })
-                .finally(() => {
+                .then(() => {
                     console.log(`***** ${filename} 结束测试 *****`);
                 });
 
