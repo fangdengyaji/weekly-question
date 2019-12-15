@@ -1,3 +1,10 @@
+/*
+ * @Author: feiyi.wf 
+ * @Date: 2019-12-14 20:15:09 
+ * @Last Modified by:   feiyi.wf 
+ * @Last Modified time: 2019-12-14 20:15:09 
+ */
+
 /**
  * @title 判断能否达到最终项函数
  * @param {arr} 需要判断的数组

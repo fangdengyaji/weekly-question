@@ -1,3 +1,10 @@
+/*
+ * @Author: feiyi.wf 
+ * @Date: 2019-12-14 20:14:49 
+ * @Last Modified by:   feiyi.wf 
+ * @Last Modified time: 2019-12-14 20:14:49 
+ */
+
 const flatArray = arr => [].concat.apply([], arr)
 
 const getSourceIndex = (arr, targetIndex, event) => {

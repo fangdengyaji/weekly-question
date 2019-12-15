@@ -1,5 +1,12 @@
+/*
+ * @Author: feiyi.wf 
+ * @Date: 2019-12-14 20:15:21 
+ * @Last Modified by: feiyi.wf
+ * @Last Modified time: 2019-12-15 12:49:37
+ */
+
 const eventLoop = [];
-const answerNums = 5;
+const answerNums = 6;
 new Array(answerNums).fill(0).forEach((item, index) => {
     eventLoop.push((res) => {
         console.log(`===============answer${index+1} 开始测试================`);

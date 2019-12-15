@@ -1,3 +1,10 @@
+/*
+ * @Author: feiyi.wf 
+ * @Date: 2019-12-14 20:15:03 
+ * @Last Modified by:   feiyi.wf 
+ * @Last Modified time: 2019-12-14 20:15:03 
+ */
+
 function canReach(target) {
   // 数组、非空、非负整数校验
   if (
