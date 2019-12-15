@@ -1,10 +1,3 @@
-/*
- * @Author: feiyi.wf 
- * @Date: 2019-12-14 20:15:29 
- * @Last Modified by:   feiyi.wf 
- * @Last Modified time: 2019-12-14 20:15:29 
- */
-
 const {
     performance
 } = require('perf_hooks');
@@ -27,4 +20,8 @@ testCase.forEach((item, index) => {
 });
 const endTime = performance.now();
 
+
 console.log('avgTime', (endTime - beginTime) / len);
+
+const used = process.memoryUsage().heapUsed / 1024 / 1024;
+console.log(`The script uses approximately ${Math.round(used * 100) / 100} MB`);

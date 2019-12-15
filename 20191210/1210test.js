@@ -1,45 +1,54 @@
-/*
- * @Author: feiyi.wf 
- * @Date: 2019-12-14 20:15:21 
- * @Last Modified by: feiyi.wf
- * @Last Modified time: 2019-12-15 12:49:37
- */
+const fs = require('fs');
+const path = require('path');
+const cp = require('child_process');
 
-const eventLoop = [];
-const answerNums = 6;
-new Array(answerNums).fill(0).forEach((item, index) => {
-    eventLoop.push((res) => {
-        console.log(`===============answer${index+1} 开始测试================`);
-        const filePath = `./answer${index+1}.js`;
-        const cp = require('child_process')
-        const path = require('path');
-        // Create the child
-        const child = cp.fork('./test-case.js', [`${path.join(__dirname, filePath)}`]);
-        // Kill after "x" milliseconds
-        setTimeout(() => {
-            child.kill();
-            console.log(`*****************answer${index+1} 进程关闭********************`);
-            res();
-        }, 10000);
-        // Listen for messages from the child
-        child.on('message', data => {
-            console.log(data);
-            res();
-            child.kill();
-        })
-    });
-});
+const TIMEOUT = 5000;
 
-function run() {
-    if (eventLoop.length > 0) {
-        const item = eventLoop.pop();
-        new Promise((res) => {
-            item(res);
-        }).then(() => {
-            run();
+const getAnswers = async () => {
+    const dirPath = path.join(__dirname, 'answers');
+    const fileNames = (await fs.promises.readdir(dirPath)).filter(fn => fn.endsWith('.js'));
+    const answers = fileNames.map(name => ({ p: path.join(dirPath, name), n: name }));
+    return answers;
+};
+
+const executor = (filepath, args, cb) => {
+    return new Promise((resolve, reject) => {
+        const child = cp.fork(filepath, args);
+
+        const timer = setTimeout(() => {
+            child.kill();
+            reject(new Error('Timeout'));
+        }, TIMEOUT);
+
+        child.on('exit', e => {
+            clearTimeout(timer);
+            resolve();
         });
-    } else {
-        return;
-    }
-}
+    });
+};
+
+const run = async (opts) => {
+    const answers = await getAnswers();
+    answers.reverse().reduce((chain, answer) => {
+        const { n: filename, p: filepath } = answer;
+
+        return chain.finally(() => {
+            console.log(`***** ${filename} 开始测试 *****`);
+            const p = executor('./test-case.js', [filepath])
+                .catch(err => {
+                    if (err.message === 'Timeout') {
+                        console.log('execute timeout');
+                    } else {
+                        console.error(err);
+                    }
+                })
+                .finally(() => {
+                    console.log(`***** ${filename} 结束测试 *****`);
+                });
+
+            return p;
+        });
+    }, Promise.resolve());
+};
+
 run();
