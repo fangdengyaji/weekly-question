@@ -4,6 +4,7 @@ const { promisify } = require('util');
 const zlib = require('zlib');
 
 const readFile = promisify(fs.readFile);
+const writeFile = promisify(fs.writeFile);
 
 const getRandomArbitrary = (min, max) => {
     return Math.random() * (max - min) + min;
@@ -30,7 +31,7 @@ const writeTCFile = (filename, data) => {
             if (err) {
                 reject(err);
             } else {
-                fs.promises.writeFile(filename, buffer)
+                writeFile(filename, buffer)
                     .then(resolve);
             }
         });
