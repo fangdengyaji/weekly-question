@@ -8,7 +8,7 @@ const answerRun = require(process.argv[2]);
 const run = async () => {
     const result = [];
 
-    await readTCFile('./testcase/small_small_int.bin').then(tc => {
+    await readTCFile('./testcase/big_big_int.bin').then(tc => {
         const beginTime = performance.now();
         tc.forEach((item, index) => {
             const res = answerRun(item);

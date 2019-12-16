@@ -55,7 +55,7 @@ const readTCFile = (filename) => {
 
 const TC_COUNT = 20;
 const SMALL_INT = 100;
-const BIG_INT = 1000000;
+const BIG_INT = 10000;
 
 const genTestCases = () => {
     Promise.all([
